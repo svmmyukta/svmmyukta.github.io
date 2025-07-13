@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+ <meta charset="UTF-8" />
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Escape the AI Lab</title>
+ <style>
+   body, html {
+     margin: 0;
+     padding: 0;
+     height: 100%;
+   }
+
+   .cover {
+     background-image: url('page 1.jpg'); /* Ensure 'page 1.jpg' is in the same folder */
+     background-size: cover;
+     background-position: center;
+     height: 100vh;
+     position: relative;
+   }
+
+   .start-button {
+     position: absolute;
+     bottom: 100px; /* Moved further down */
+     left: 50%;
+     transform: translateX(-50%);
+     background-color: #111;
+     color: #fff;
+     padding: 16px 32px; /* Smaller size */
+     font-size: 20px; /* Smaller text */
+     font-weight: 700;
+     border: none;
+     border-radius: 14px;
+     cursor: pointer;
+     box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+     transition: background-color 0.3s ease, transform 0.3s ease;
+     letter-spacing: 1.5px;
+     text-transform: uppercase;
+   }
+
+   .start-button:hover {
+     background-color: #222;
+     box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+     transform: translateX(-50%) scale(1.1);
+   }
+ </style>
+</head>
+<body>
+ <div class="cover">
+   <button class="start-button" onclick="window.location.href='page2.html'">Start Mission</button>
+ </div>
+</body>
+</html>
+
+
+

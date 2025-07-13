@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mad Scientist's Chip - Page 3</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Orbitron', sans-serif;
+      background-image: url('page 3.jpg');
+      background-size: cover;
+      overflow: hidden;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+
+    body.fade-in {
+      opacity: 1;
+    }
+
+    .container {
+      position: relative;
+      text-align: center;
+      z-index: 2;
+      padding: 80px 20px;
+    }
+
+    @keyframes pulse-left {
+      0% { transform: scale(1) rotate(-20deg); }
+      50% { transform: scale(1.1) rotate(-20deg); }
+      100% { transform: scale(1) rotate(-20deg); }
+    }
+
+    @keyframes pulse-right {
+      0% { transform: scale(1) rotate(20deg); }
+      50% { transform: scale(1.1) rotate(20deg); }
+      100% { transform: scale(1) rotate(20deg); }
+    }
+
+    .warning-gif {
+      width: 80px; /* smaller */
+      height: auto;
+      animation: pulse-left 2s infinite;
+      margin-top: 30px;
+      margin-bottom: 10px;
+    }
+
+    .bottom-right-gif {
+      position: fixed;
+      bottom: 90px;
+      right: 180px;
+      width: 80px; /* smaller */
+      height: auto;
+      animation: pulse-right 2s infinite;
+      z-index: 1001;
+      pointer-events: none;
+    }
+
+    .next-btn {
+      position: fixed;
+      bottom: 30px; /* aligned with start mission button */
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 16px 32px; /* smaller button */
+      font-size: 20px;
+      font-weight: 700;
+      font-family: 'Orbitron', sans-serif;
+      color: white;
+      background-color: black;
+      border: none;
+      border-radius: 14px;
+      cursor: pointer;
+      box-shadow: 0 0 15px rgba(255, 255, 255, 0.6);
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      z-index: 1000;
+    }
+
+    .next-btn:hover {
+      background-color: #222;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.9);
+      transform: translateX(-50%) scale(1.1);
+    }
+  </style>
+
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <div class="container">
+    <img src="Blinking_warning.gif" alt="Warning" class="warning-gif" />
+  </div>
+
+  <button class="next-btn" onclick="window.location.href='page4.html'">Next</button>
+
+  <img src="Blinking_warning.gif" alt="Bottom Right Warning" class="bottom-right-gif" />
+
+  <script>
+    window.addEventListener('load', () => {
+      document.body.classList.add('fade-in');
+    });
+  </script>
+</body>
+</html>
+
+
+
+
+

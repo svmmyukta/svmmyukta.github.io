@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Mad Scientist's Chip - Page 8</title>
+  <style>
+    html, body {
+      margin: 0; padding: 0; height: 100%;
+      background: url('room 3.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Orbitron', monospace;
+      color: white;
+      overflow: hidden;
+    }
+
+    .popup-image {
+      position: absolute;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .popup-image:hover {
+      transform: scale(1.1);
+    }
+
+    #blue1 {
+      top: 43%;
+      left: 23%;
+      width: 80px;
+    }
+
+    #blue2 {
+      top: 53%;
+      left: 93%;
+      width: 70px;
+    }
+
+    #chair {
+      top: 50%;
+      left: 51%;
+      width: 120px;
+    }
+
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 70vw;
+      max-width: 900px;
+      background-color: rgba(0, 0, 0, 0.8);
+      padding: 30px 40px;
+      box-sizing: border-box;
+      border-radius: 14px;
+      z-index: 2000;
+      display: none;
+      flex-direction: column;
+      color: white;
+      text-align: center;
+    }
+
+    .popup .question {
+      font-size: 1.4rem;
+      margin-bottom: 20px;
+    }
+
+    .popup .options {
+      background-color: white;
+      padding: 20px;
+      border-radius: 12px;
+    }
+
+    .popup .options button {
+      display: block;
+      width: 100%;
+      background: transparent;
+      border: 2px solid purple;
+      color: black;
+      font-size: 1.1rem;
+      padding: 12px 0;
+      margin: 8px 0;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .popup .options button:hover {
+      background-color: rgba(128, 0, 128, 0.6);
+      color: white;
+    }
+
+    .popup .feedback {
+      margin-top: 15px;
+      font-weight: 700;
+      font-size: 1.2rem;
+    }
+
+    .popup .feedback.correct {
+      color: #00ff00;
+    }
+
+    .popup .feedback.wrong {
+      color: #ff4444;
+    }
+
+    .popup .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 24px;
+      color: white;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    .bottom-overlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25vh;
+      background-color: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+      z-index: 3000;
+    }
+
+    .typewriter-text {
+      font-size: 1.3rem;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid white;
+      width: 0;
+      animation: typing 6s steps(78, end) forwards, blinkCaret 0.75s step-end infinite;
+      text-align: center;
+      max-width: 78ch;
+    }
+
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 78ch; }
+    }
+
+    @keyframes blinkCaret {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: white; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Interactive Objects -->
+  <img src="blue solution.png" class="popup-image" id="blue1" />
+  <img src="blue solution 2.png" class="popup-image" id="blue2" />
+  <img src="chair.png" class="popup-image" id="chair" />
+
+  <!-- Quiz Pop-Up -->
+  <div class="popup" id="popupQuiz">
+    <button class="close-btn" id="closePopup">&times;</button>
+    <div class="question" id="quizQuestion"></div>
+    <div class="options" id="quizOptions"></div>
+    <div class="feedback" id="quizFeedback"></div>
+  </div>
+
+  <!-- Typewriter Reveal -->
+  <div class="bottom-overlay" id="bottomOverlay">
+    <div class="typewriter-text" id="typewriterText">
+      <span>Well done! You've uncovered all the hidden clues.</span><br />
+      <span>Now, let's find out if you've truly cracked the chip!</span>
+    </div>
+  </div>
+
+  <script>
+    const questions = {
+      blue1: {
+        question: "What is a deepfake?",
+        options: [
+          "a) A genuine video with no edits",
+          "b) A video or image manipulated to convincingly imitate someone",
+          "c) A random photo on the internet"
+        ],
+        correctIndex: 1
+      },
+      blue2: {
+        question: "Which sign suggests an image might be AI-generated or fake?",
+        options: [
+          "a) Blurry or inconsistent shadows",
+          "b) Perfect, high-quality lighting everywhere",
+          "c) Image with watermarks only"
+        ],
+        correctIndex: 0
+      },
+      chair: {
+        question: "How can AI impersonation harm people?",
+        options: [
+          "a) By spreading false information or scams using fake identities",
+          "b) By improving online profiles",
+          "c) By deleting fake accounts automatically"
+        ],
+        correctIndex: 0
+      }
+    };
+
+    const completed = {
+      blue1: false,
+      blue2: false,
+      chair: false
+    };
+
+    const popupQuiz = document.getElementById('popupQuiz');
+    const quizQuestion = document.getElementById('quizQuestion');
+    const quizOptions = document.getElementById('quizOptions');
+    const quizFeedback = document.getElementById('quizFeedback');
+
+    function openPopup(id) {
+      const qData = questions[id];
+      if (!qData || completed[id]) return;
+
+      quizQuestion.textContent = qData.question;
+      quizOptions.innerHTML = '';
+      quizFeedback.textContent = '';
+      popupQuiz.style.display = 'flex';
+
+      qData.options.forEach((option, index) => {
+        const btn = document.createElement('button');
+        btn.textContent = option;
+        btn.onclick = () => {
+          if (index === qData.correctIndex) {
+            quizFeedback.textContent = 'Correct!';
+            quizFeedback.className = 'feedback correct';
+            completed[id] = true;
+            document.getElementById(id).style.boxShadow = "0 0 25px 5px lime";
+            setTimeout(() => {
+              popupQuiz.style.display = 'none';
+              checkAllCompleted();
+            }, 1200);
+          } else {
+            quizFeedback.textContent = 'Wrong!';
+            quizFeedback.className = 'feedback wrong';
+          }
+        };
+        quizOptions.appendChild(btn);
+      });
+    }
+
+    document.getElementById('blue1').addEventListener('click', () => openPopup('blue1'));
+    document.getElementById('blue2').addEventListener('click', () => openPopup('blue2'));
+    document.getElementById('chair').addEventListener('click', () => openPopup('chair'));
+
+    document.getElementById('closePopup').addEventListener('click', () => {
+      popupQuiz.style.display = 'none';
+    });
+
+    function checkAllCompleted() {
+      if (completed.blue1 && completed.blue2 && completed.chair) {
+        showTypewriter();
+      }
+    }
+
+    function showTypewriter() {
+      const overlay = document.getElementById("bottomOverlay");
+      overlay.style.display = "flex";
+
+      setTimeout(() => {
+        window.location.href = "page9.html";
+      }, 9000); // 6s for typewriter + 3s pause
+    }
+  </script>
+</body>
+</html>
+
+
+
+

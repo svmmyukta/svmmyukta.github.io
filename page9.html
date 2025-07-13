@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Case Cracked</title>
+  <style>
+    body {
+      margin: 0;
+      background: url("room 4.jpg") no-repeat center center fixed;
+      background-size: cover;
+      font-family: 'Courier New', monospace;
+      overflow: hidden;
+      color: white;
+    }
+
+    #chip {
+      position: absolute;
+      top: 38%;
+      left: 52%;
+      width: 200px; /* smaller */
+      transform: translate(-50%, -50%);
+      cursor: pointer;
+      z-index: 5;
+      transition: transform 0.3s ease;
+      filter: drop-shadow(0 0 20px white);
+    }
+
+    #chip:hover {
+      transform: translate(-50%, -50%) scale(1.2);
+    }
+
+    #messageBox {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 50%; /* smaller width */
+      max-width: 500px;
+      background: rgba(0, 0, 0, 0.85);
+      color: white;
+      padding: 25px 30px; /* smaller padding */
+      text-align: center;
+      border-radius: 20px;
+      z-index: 10;
+      box-shadow: 0 0 30px white;
+    }
+
+    #messageBox h2 {
+      font-size: 1.8rem; /* smaller font */
+      margin-bottom: 25px;
+      white-space: normal;
+      overflow: visible;
+      border: none;
+      width: auto;
+      animation: none;
+      background: linear-gradient(to right, #ffffff, #ff99ff, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    #homeBtn {
+      padding: 12px 30px;
+      font-size: 20px;
+      margin-top: 30px;
+      background: purple;
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      border-radius: 10px;
+      transition: transform 0.3s ease, background-color 0.3s ease;
+      animation: pulse 2s infinite;
+    }
+
+    #homeBtn:hover {
+      background-color: darkviolet;
+      transform: scale(1.1);
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 10px purple; }
+      50% { box-shadow: 0 0 25px purple; }
+      100% { box-shadow: 0 0 10px purple; }
+    }
+
+    .confetti {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background-color: red;
+      opacity: 0.9;
+      border-radius: 2px;
+      z-index: 9999;
+      pointer-events: none;
+      animation: explode 1s ease-out forwards;
+    }
+
+    @keyframes explode {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(var(--dx), var(--dy)) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .sparkle {
+      position: absolute;
+      width: 6px;
+      height: 6px;
+      background: white;
+      border-radius: 50%;
+      opacity: 0.8;
+      animation: sparkle 1.5s ease-out infinite;
+      pointer-events: none;
+      z-index: 9998;
+    }
+
+    @keyframes sparkle {
+      0% { transform: scale(0); opacity: 1; }
+      50% { transform: scale(1.5); opacity: 0.7; }
+      100% { transform: scale(0); opacity: 0; }
+    }
+
+    /* Bottom Overlay Container */
+    #bottomOverlay {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 25vh; /* quarter screen height */
+      background-color: rgba(0, 0, 0, 0.6);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0 20px;
+      box-sizing: border-box;
+      z-index: 10000;
+    }
+
+    /* Typewriter Text */
+    .typewriter-text {
+      font-size: 1.3rem;
+      white-space: nowrap;
+      overflow: hidden;
+      border-right: 3px solid white;
+      width: 0; /* start at zero width for typing effect */
+      max-width: 90%;
+      text-align: center;
+      animation: typing 3s steps(38, end) forwards, blinkCaret 0.75s step-end infinite;
+      background: linear-gradient(to right, #ffffff, #ff99ff, #ffffff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* Keyframes for typing */
+    @keyframes typing {
+      from { width: 0; }
+      to { width: 100%; }
+    }
+
+    /* Caret blink */
+    @keyframes blinkCaret {
+      0%, 100% { border-color: transparent; }
+      50% { border-color: white; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Celebration Audio -->
+  <audio id="cheerAudio" src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_29f578f542.mp3?filename=small-crowd-cheer-10822.mp3" preload="auto"></audio>
+
+  <!-- Bottom Typewriter Overlay -->
+  <div id="bottomOverlay">
+    <div class="typewriter-text">Click on the chip in the centre to unlock!</div>
+  </div>
+
+  <!-- Clickable Chip -->
+  <img id="chip" src="the chip.png" alt="Chip" />
+
+  <!-- Message Box -->
+  <div id="messageBox">
+    <h2>Case Cracked! Good job detective.</h2>
+    <button id="homeBtn" onclick="location.href='page1.html'">Return to home</button>
+  </div>
+
+  <script>
+    const chip = document.getElementById("chip");
+    const messageBox = document.getElementById("messageBox");
+    const cheerAudio = document.getElementById("cheerAudio");
+
+    // Confetti burst
+    function createConfettiBurst(x, y) {
+      for (let i = 0; i < 50; i++) {
+        const confetti = document.createElement("div");
+        confetti.classList.add("confetti");
+        confetti.style.left = `${x}px`;
+        confetti.style.top = `${y}px`;
+
+        const angle = Math.random() * 2 * Math.PI;
+        const distance = Math.random() * 250 + 100;
+        const dx = Math.cos(angle) * distance + "px";
+        const dy = Math.sin(angle) * distance + "px";
+
+        confetti.style.setProperty("--dx", dx);
+        confetti.style.setProperty("--dy", dy);
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 60%)`;
+
+        document.body.appendChild(confetti);
+        setTimeout(() => confetti.remove(), 1200);
+      }
+    }
+
+    // Sparkles loop
+    function createSparklesLoop() {
+      setInterval(() => {
+        for (let i = 0; i < 10; i++) {
+          const sparkle = document.createElement("div");
+          sparkle.classList.add("sparkle");
+          sparkle.style.left = `${Math.random() * 100}%`;
+          sparkle.style.top = `${20 + Math.random() * 60}%`;
+          sparkle.style.animationDelay = `${Math.random()}s`;
+          document.body.appendChild(sparkle);
+          setTimeout(() => sparkle.remove(), 3000);
+        }
+      }, 1200);
+    }
+
+    // Fade out bottom overlay after 5s (optional)
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const overlay = document.getElementById("bottomOverlay");
+        overlay.style.transition = "opacity 1s ease";
+        overlay.style.opacity = "0";
+        setTimeout(() => {
+          overlay.style.display = "none";
+        }, 1000);
+      }, 5000);
+    });
+
+    chip.onclick = (e) => {
+      messageBox.style.display = "block";
+      createConfettiBurst(e.clientX, e.clientY);
+      createSparklesLoop();
+      cheerAudio.play();
+    };
+  </script>
+</body>
+</html>
+
+
